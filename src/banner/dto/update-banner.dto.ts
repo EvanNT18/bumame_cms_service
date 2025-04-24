@@ -1,4 +1,9 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateBannerDto } from './create-banner.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsOptional } from 'class-validator';
 
-export class UpdateBannerDto extends PartialType(CreateBannerDto) {}
+export class UpdateBannerDto {
+  @ApiProperty({ type: 'integer', description: 'Position of the banner', required: false })
+  @IsInt()
+  @IsOptional()
+  orderPosition?: number;
+}

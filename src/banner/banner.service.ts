@@ -26,15 +26,9 @@ export class BannerService {
   }
 
   async findAll(): Promise<Banner[]> {
-    const banners = await this.bannerRepository.find({
+    return await this.bannerRepository.find({
       order: { orderPosition: 'ASC' },
     });
-
-    for (const banner of banners) {
-      banner.imageUrl = await this.minioService.getFileUrl(banner.imageUrl);
-    }
-
-    return banners;
   }
 
   async findOne(id: string): Promise<Banner> {

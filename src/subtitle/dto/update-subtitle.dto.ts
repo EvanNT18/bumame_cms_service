@@ -1,4 +1,9 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateSubtitleDto } from './create-subtitle.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty } from 'class-validator';
 
-export class UpdateSubtitleDto extends PartialType(CreateSubtitleDto) {}
+export class UpdateSubtitleDto {
+  @ApiProperty({ description: 'Text content of the subtitle' })
+  @IsString()
+  @IsNotEmpty()
+  text: string;
+}
