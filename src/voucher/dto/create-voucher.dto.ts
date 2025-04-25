@@ -1,24 +1,37 @@
-import { IsString, IsNotEmpty, MinLength, MaxLength, Matches, IsOptional, IsBoolean } from "class-validator";
-
+// src/voucher/dto/create-voucher.dto.ts
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty, IsOptional, IsBoolean, IsUUID, IsArray } from 'class-validator';
 
 export class CreateVoucherDto {
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(6)
-    @MaxLength(20)
-    @Matches(/^[A-Z0-9_]+$/, {
-      message: 'Voucher code must contain only uppercase letters, numbers, and underscores'
-    })
-    code: string;
-  
-    @IsString()
-    @IsOptional()
-    @Matches(/^[a-z0-9-]+$/, {
-      message: 'Slug must contain only lowercase letters, numbers, and hyphens'
-    })
-    slug?: string;
-  
-    @IsBoolean()
-    @IsOptional()
-    is_active?: boolean;
-  }
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  code: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  slug?: string;
+
+  @ApiProperty({ required: false, default: true })
+  @IsBoolean()
+  @IsOptional()
+  is_active?: boolean;
+
+  @ApiProperty()
+  @IsUUID()
+  banner_id: string;
+
+  @ApiProperty()
+  @IsUUID()
+  subtitle_id: string;
+
+  @ApiProperty()
+  @IsUUID()
+  terms_and_conditions_id: string;
+
+  @ApiProperty({ type: [String] })
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  faq_ids: string[];
+}

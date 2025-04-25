@@ -4,30 +4,40 @@ import { CreateSubtitleDto } from './dto/create-subtitle.dto';
 import { UpdateSubtitleDto } from './dto/update-subtitle.dto';
 import { SubtitleResponseDto } from './dto/subtitle-response.dto';
 import { Subtitle } from './entities/subtitle.entity';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Subtitle')
 @Controller('subtitles')
 export class SubtitleController {
   constructor(private readonly subtitleService: SubtitleService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Create new terms and conditions' })
+  @ApiResponse({ status: 201, description: 'Terms and conditions created successfully' })
   async findAll(): Promise<SubtitleResponseDto[]> {
     const subtitles = await this.subtitleService.findAll();
     return subtitles.map(subtitle => this.toResponseDto(subtitle));
   }
 
   @Get(':key')
+  @ApiOperation({ summary: 'Create new terms and conditions' })
+  @ApiResponse({ status: 201, description: 'Terms and conditions created successfully' })
   async findByKey(@Param('key') key: string): Promise<SubtitleResponseDto> {
     const subtitle = await this.subtitleService.findByKey(key);
     return this.toResponseDto(subtitle);
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create new terms and conditions' })
+  @ApiResponse({ status: 201, description: 'Terms and conditions created successfully' })
   async create(@Body() createSubtitleDto: CreateSubtitleDto): Promise<SubtitleResponseDto> {
     const subtitle = await this.subtitleService.create(createSubtitleDto.key, createSubtitleDto.text);
     return this.toResponseDto(subtitle);
   }
 
   @Patch(':key')
+  @ApiOperation({ summary: 'Create new terms and conditions' })
+  @ApiResponse({ status: 201, description: 'Terms and conditions created successfully' })
   async update(
     @Param('key') key: string,
     @Body() updateSubtitleDto: UpdateSubtitleDto,
@@ -37,6 +47,8 @@ export class SubtitleController {
   }
 
   @Delete(':key')
+  @ApiOperation({ summary: 'Create new terms and conditions' })
+  @ApiResponse({ status: 201, description: 'Terms and conditions created successfully' })
   async remove(@Param('key') key: string): Promise<void> {
     await this.subtitleService.remove(key);
   }

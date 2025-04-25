@@ -20,6 +20,7 @@ export class Banner {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+    vouchers: any;
 
   constructor(partial?: Partial<Banner>) {
     Object.assign(this, partial);

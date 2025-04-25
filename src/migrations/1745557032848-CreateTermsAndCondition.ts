@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreateTermsAndConditionsTable1745501113817 implements MigrationInterface {
+export class CreateTermsAndCondition1745557032848 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
@@ -15,6 +15,7 @@ export class CreateTermsAndConditionsTable1745501113817 implements MigrationInte
             );
         `);
     }
+        
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`DROP TABLE terms_and_conditions`);

@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class BannerResponseDto {
-  @ApiProperty({ description: 'Banner ID' })
+  @ApiProperty({
+    description: 'Banner ID' })
   id: string;
 
-  @ApiProperty({ description: 'URL of the banner image' })
+  @ApiProperty({ 
+    description: 'URL of the banner image' })
   imageUrl: string;
 
   @ApiProperty({ description: 'Whether the banner is active' })

@@ -3,9 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Banner } from './entities/banner.entity';
 import { MinioService } from '../storage/minio.service';
+import { Voucher } from 'src/voucher/entities/voucher.entity';
 
 @Injectable()
 export class BannerService {
+  voucherRepository: any;
   constructor(
     @InjectRepository(Banner)
     private bannerRepository: Repository<Banner>,

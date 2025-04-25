@@ -1,6 +1,6 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreateVoucherTable1745497955202 implements MigrationInterface {
+export class CreateRelations1745557183663 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
@@ -13,12 +13,9 @@ export class CreateVoucherTable1745497955202 implements MigrationInterface {
                 is_active BOOLEAN DEFAULT TRUE,
                 created_at TIMESTAMP NOT NULL DEFAULT NOW(),
                 updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-            );
+            )
         `);
-      
-          
-        }
-    
+    }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropTable('vouchers');
