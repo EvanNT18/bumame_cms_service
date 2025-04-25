@@ -8,7 +8,7 @@ export class Banner {
 
   @Column({ name: 'image_url', length: 512 })
   @Transform(({ value }) =>
-    "hmmm"
+    value && !value.startsWith('http') && !value.startsWith('https') ? `${process.env.OBJECT_BASE_URL}/${value}` : value,
   )
   imageUrl: string; 
 

@@ -22,7 +22,8 @@ export class BannerController {
   })
   async findAll(): Promise<BannerResponseDto[]> {
     const banners = await this.bannerService.findAll();
-    return banners.map(banner => this.toResponseDto(banner));
+
+    return banners
   }
 
   @Get(':id')
@@ -34,7 +35,7 @@ export class BannerController {
   })
   async findOne(@Param('id') id: string): Promise<BannerResponseDto> {
     const banner = await this.bannerService.findOne(id);
-    return this.toResponseDto(banner);
+    return banner
   }
 
   @Post()
@@ -55,7 +56,7 @@ export class BannerController {
     @Body() createBannerDto: CreateBannerDto,
   ): Promise<BannerResponseDto> {
     const banner = await this.bannerService.create(file, createBannerDto.orderPosition);
-    return this.toResponseDto(banner);
+    return banner
   }
 
   @Patch(':id')
@@ -77,7 +78,7 @@ export class BannerController {
     @Body() updateBannerDto: UpdateBannerDto,
   ): Promise<BannerResponseDto> {
     const banner = await this.bannerService.update(id, file, updateBannerDto.orderPosition);
-    return this.toResponseDto(banner);
+    return banner
   }
 
   @Delete(':id')
@@ -96,17 +97,6 @@ export class BannerController {
   })
   async setActive(@Param('id') id: string): Promise<BannerResponseDto> {
     const banner = await this.bannerService.setActive(id);
-    return this.toResponseDto(banner);
-  }
-
-  private toResponseDto(banner: Banner): BannerResponseDto {
-    const dto = new BannerResponseDto();
-    dto.id = banner.id;
-    dto.imageUrl = banner.imageUrl;
-    dto.isActive = banner.isActive;
-    dto.orderPosition = banner.orderPosition;
-    dto.createdAt = banner.createdAt;
-    dto.updatedAt = banner.updatedAt;
-    return dto;
+    return banner
   }
 }
