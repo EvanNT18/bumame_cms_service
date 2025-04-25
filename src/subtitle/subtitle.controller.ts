@@ -12,32 +12,34 @@ export class SubtitleController {
   constructor(private readonly subtitleService: SubtitleService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Create new terms and conditions' })
-  @ApiResponse({ status: 201, description: 'Terms and conditions created successfully' })
+  @ApiOperation({ summary: 'Get all subtitles' })
+  @ApiResponse({ status: 200, description: 'Returns all subtitles', type: [SubtitleResponseDto] })
   async findAll(): Promise<SubtitleResponseDto[]> {
     const subtitles = await this.subtitleService.findAll();
     return subtitles.map(subtitle => this.toResponseDto(subtitle));
   }
 
   @Get(':key')
-  @ApiOperation({ summary: 'Create new terms and conditions' })
-  @ApiResponse({ status: 201, description: 'Terms and conditions created successfully' })
+  @ApiOperation({ summary: 'Get subtitle by key' })
+  @ApiResponse({ status: 200, description: 'Returns a subtitle by its key', type: SubtitleResponseDto })
+  @ApiResponse({ status: 404, description: 'Subtitle not found' })
   async findByKey(@Param('key') key: string): Promise<SubtitleResponseDto> {
     const subtitle = await this.subtitleService.findByKey(key);
     return this.toResponseDto(subtitle);
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create new terms and conditions' })
-  @ApiResponse({ status: 201, description: 'Terms and conditions created successfully' })
+  @ApiOperation({ summary: 'Create a new subtitle' })
+  @ApiResponse({ status: 201, description: 'Subtitle created successfully', type: SubtitleResponseDto })
   async create(@Body() createSubtitleDto: CreateSubtitleDto): Promise<SubtitleResponseDto> {
     const subtitle = await this.subtitleService.create(createSubtitleDto.key, createSubtitleDto.text);
     return this.toResponseDto(subtitle);
   }
 
   @Patch(':key')
-  @ApiOperation({ summary: 'Create new terms and conditions' })
-  @ApiResponse({ status: 201, description: 'Terms and conditions created successfully' })
+  @ApiOperation({ summary: 'Update a subtitle' })
+  @ApiResponse({ status: 200, description: 'Subtitle updated successfully', type: SubtitleResponseDto })
+  @ApiResponse({ status: 404, description: 'Subtitle not found' })
   async update(
     @Param('key') key: string,
     @Body() updateSubtitleDto: UpdateSubtitleDto,
@@ -47,8 +49,9 @@ export class SubtitleController {
   }
 
   @Delete(':key')
-  @ApiOperation({ summary: 'Create new terms and conditions' })
-  @ApiResponse({ status: 201, description: 'Terms and conditions created successfully' })
+  @ApiOperation({ summary: 'Delete a subtitle' })
+  @ApiResponse({ status: 200, description: 'Subtitle deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Subtitle not found' })
   async remove(@Param('key') key: string): Promise<void> {
     await this.subtitleService.remove(key);
   }

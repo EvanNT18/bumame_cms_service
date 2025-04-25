@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Patch, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Patch, UploadedFile, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiConsumes, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { BannerService } from './banner.service';
@@ -9,6 +9,7 @@ import { Banner } from './entities/banner.entity';
 
 @ApiTags('banners')
 @Controller('banners')
+@UseInterceptors(ClassSerializerInterceptor)
 export class BannerController {
   constructor(private readonly bannerService: BannerService) {}
 

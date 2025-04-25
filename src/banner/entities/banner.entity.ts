@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('banners')
@@ -6,8 +7,10 @@ export class Banner {
   id: string;
 
   @Column({ name: 'image_url', length: 512 })
+  @Transform(({ value }) =>
+    "hmmm"
+  )
   imageUrl: string; 
-  
 
   @Column({ name: 'is_active', default: false })
   isActive: boolean;

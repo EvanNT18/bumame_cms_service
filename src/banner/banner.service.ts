@@ -15,7 +15,6 @@ export class BannerService {
   ) {}
 
   private sanitizeFileName(fileName: string): string {
-   
     return fileName
       .replace(/[^\w\d.-]/g, '_')  
       .replace(/\s+/g, '_')  
@@ -38,7 +37,6 @@ export class BannerService {
     if (!banner) {
       throw new NotFoundException('Banner not found');
     }
-    banner.imageUrl = await this.minioService.getFileUrl(banner.imageUrl);
     return banner;
   }
 

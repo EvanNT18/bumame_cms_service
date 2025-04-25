@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { VoucherService } from './voucher.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
@@ -10,6 +10,7 @@ import { CreateTermsAndConditionsDto } from 'src/terms-and-conditions/dto/create
 
 @ApiTags('Vouchers')
 @Controller('vouchers')
+@UseInterceptors(ClassSerializerInterceptor)
 export class VoucherController {
   constructor(private readonly voucherService: VoucherService) {}
 
@@ -87,16 +88,16 @@ export class VoucherController {
 
   private toResponseDto(voucher: any): VoucherResponseDto {
     return {
-  id: voucher.id,
-  code: voucher.code,
-  slug: voucher.slug,
-  is_active: voucher.is_active,
-  created_at: voucher.created_at,
-  updated_at: voucher.updated_at,
-  banner: new CreateBannerDto,
-  subtitle: new CreateSubtitleDto,
-  termsAndConditions: new CreateTermsAndConditionsDto,
-  faqs: [],
-};
+      id: voucher.id,
+      code: voucher.code,
+      slug: voucher.slug,
+      is_active: voucher.is_active,
+      created_at: voucher.created_at,
+      updated_at: voucher.updated_at,
+      banner: voucher.banner || null,
+      subtitle: voucher.subtitle || null,
+      termsAndConditions: voucher.terms_and_conditions || null,
+      faqs: voucher.faqs || []
+    };
   }
 }
