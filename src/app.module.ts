@@ -5,6 +5,9 @@ import { DatabaseModule } from './database/database.module';
 import { join } from 'path';
 import { StorageModule } from './storage/minio.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { PartnersModule } from './partners/partners.module';
 
 
 
@@ -20,6 +23,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     }),
     DatabaseModule,
     StorageModule,
+    PartnersModule,
   ],
 })
 export class AppModule {}
