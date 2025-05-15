@@ -13,41 +13,40 @@ export class SubtitlesService {
   ) {}
 
   async create(dto: CreateSubtitleDto) {
-  const subtitle = this.subtitleRepo.create({
-    text: dto.text,
-    partner: { id: dto.partnerId }, 
-  });
-  return this.subtitleRepo.save(subtitle);
-}
-
+    const subtitle = this.subtitleRepo.create({
+      text: dto.text,
+      partner: { id: dto.partnerId },
+    });
+    return this.subtitleRepo.save(subtitle);
+  }
 
   findAll() {
     return this.subtitleRepo.find({ relations: ['partner'] });
   }
 
   async findOne(id: string) {
-    const subtitle = await this.subtitleRepo.findOne({ where: { id }, relations: ['partner'] });
+    const subtitle = await this.subtitleRepo.findOne({
+      where: { id },
+      relations: ['partner'],
+    });
     if (!subtitle) throw new NotFoundException('Subtitle not found');
     return subtitle;
   }
 
   async update(id: string, dto: UpdateSubtitleDto) {
-  const subtitle = await this.findOne(id); 
+    const subtitle = await this.findOne(id);
 
-  subtitle.text = dto.text ?? 'Default subtitle text';
+    subtitle.text = dto.text ?? 'Default subtitle text';
 
+    if (dto.partnerId) {
+      subtitle.partner = { id: dto.partnerId } as any;
+    }
 
-  if (dto.partnerId) {
-  subtitle.partner = { id: dto.partnerId } as any;
-}
-
-
-  return this.subtitleRepo.save(subtitle); 
-}
-
+    return this.subtitleRepo.save(subtitle);
+  }
 
   async remove(id: string) {
-    await this.findOne(id);   
+    await this.findOne(id);
     return this.subtitleRepo.softDelete(id);
   }
 }

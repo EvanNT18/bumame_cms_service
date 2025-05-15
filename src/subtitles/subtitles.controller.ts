@@ -1,5 +1,11 @@
 import {
-  Controller, Get, Post, Body, Patch, Param, Delete,
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { SubtitlesService } from './subtitles.service';
 import { CreateSubtitleDto } from './dto/create-subtitle.dto';

@@ -1,13 +1,32 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, DefaultValuePipe, ParseIntPipe, HttpCode, ParseUUIDPipe, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Query,
+  DefaultValuePipe,
+  ParseIntPipe,
+  HttpCode,
+  ParseUUIDPipe,
+  Patch,
+} from '@nestjs/common';
 import { PartnersService } from './partners.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
-import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('Partners')
 @Controller('partners')
 export class PartnersController {
-  constructor(private readonly partnersService: PartnersService) { }
+  constructor(private readonly partnersService: PartnersService) {}
 
   @ApiOperation({
     summary: 'Create a new partner',
@@ -76,7 +95,7 @@ export class PartnersController {
   })
   @ApiParam({
     name: 'id',
-    description: 'Partner id', 
+    description: 'Partner id',
   })
   @ApiResponse({
     status: 200,

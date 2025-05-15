@@ -15,20 +15,22 @@ export class MinioService {
       accessKey: this.configService.get<string>('MINIO_ACCESS_KEY')!,
       secretKey: this.configService.get<string>('MINIO_SECRET_KEY')!,
     });
-  
+
     this.bucketName = this.configService.get<string>('MINIO_BUCKET_NAME')!;
     this.createBucketIfNotExists();
   }
-  
+
   private async createBucketIfNotExists() {
     const bucketExists = await this.minioClient.bucketExists(this.bucketName);
     if (!bucketExists) {
       await this.minioClient.makeBucket(this.bucketName, 'us-east-1');
     }
   }
-  
 
-  async uploadFile(file: Express.Multer.File, fileName: string): Promise<string> {
+  async uploadFile(
+    file: Express.Multer.File,
+    fileName: string,
+  ): Promise<string> {
     await this.minioClient.putObject(
       this.bucketName,
       fileName,
@@ -36,7 +38,7 @@ export class MinioService {
       file.size,
       {
         'Content-Type': file.mimetype,
-      }
+      },
     );
     return fileName;
   }
@@ -46,22 +48,21 @@ export class MinioService {
       'GET',
       this.bucketName,
       fileName,
-      24 * 60 * 60 // URL berlaku 24 jam
+      24 * 60 * 60, // URL berlaku 24 jam
     );
   }
 
   private extractFileName(urlOrName: string): string {
     if (!urlOrName.includes('http')) return urlOrName;
-    
+
     const raw = decodeURIComponent(urlOrName);
     const parts = raw.split('/');
     const lastSegment = parts[parts.length - 1];
-    return lastSegment.split('?')[0]; 
+    return lastSegment.split('?')[0];
   }
 
   async deleteFile(urlOrName: string): Promise<void> {
     const fileName = this.extractFileName(urlOrName);
     await this.minioClient.removeObject(this.bucketName, fileName);
   }
-  
 }

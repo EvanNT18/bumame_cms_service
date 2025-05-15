@@ -4,11 +4,10 @@ import BaseEntityExtended from 'src/database/BaseEntityExtended.entity';
 
 @Entity('terms')
 export class Term extends BaseEntityExtended {
-    
-    @Column('text', { name: 'text' })
-    text: string;
+  @Column('text', { name: 'text' })
+  text: string;
 
-    @ManyToOne(() => Partner, partner => partner.terms)
-    @JoinColumn({ name: 'partner_id' })
-    partner: Partner;
+  @ManyToOne(() => Partner, (partner) => partner.terms)
+  @JoinColumn({ name: 'partner_id' })
+  partner: Partner;
 }

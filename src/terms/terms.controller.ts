@@ -1,5 +1,11 @@
 import {
-  Controller, Get, Post, Body, Patch, Param, Delete,
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { TermsService } from './terms.service';
 import { CreateTermDto } from './dto/create-term.dto';

@@ -6,9 +6,7 @@ import { Partner } from './entities/partner.entity';
 import { Repository } from 'typeorm';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Partner]),
-  ],
+  imports: [TypeOrmModule.forFeature([Partner])],
   controllers: [PartnersController],
   providers: [PartnersService, Repository],
 })

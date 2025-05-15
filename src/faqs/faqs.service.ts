@@ -13,37 +13,38 @@ export class FaqsService {
   ) {}
 
   async create(dto: CreateFaqDto) {
-  const faq = this.faqRepo.create({
-    question: dto.question,
-    answer: dto.answer,
-    partner: { id: dto.partnerId },
-  });
-  return this.faqRepo.save(faq);
-}
-
+    const faq = this.faqRepo.create({
+      question: dto.question,
+      answer: dto.answer,
+      partner: { id: dto.partnerId },
+    });
+    return this.faqRepo.save(faq);
+  }
 
   findAll() {
     return this.faqRepo.find({ relations: ['partner'] });
   }
 
   async findOne(id: string) {
-    const faq = await this.faqRepo.findOne({ where: { id }, relations: ['partner'] });
+    const faq = await this.faqRepo.findOne({
+      where: { id },
+      relations: ['partner'],
+    });
     if (!faq) throw new NotFoundException('FAQ not found');
     return faq;
   }
 
   async update(id: string, dto: UpdateFaqDto) {
-  const existing = await this.findOne(id);
+    const existing = await this.findOne(id);
 
-  const updated = this.faqRepo.merge(existing, {
-    question: dto.question,
-    answer: dto.answer,
-    partner: dto.partnerId ? { id: dto.partnerId } : existing.partner, 
-  });
+    const updated = this.faqRepo.merge(existing, {
+      question: dto.question,
+      answer: dto.answer,
+      partner: dto.partnerId ? { id: dto.partnerId } : existing.partner,
+    });
 
-  return this.faqRepo.save(updated);
-}
-
+    return this.faqRepo.save(updated);
+  }
 
   async remove(id: string) {
     await this.findOne(id);
