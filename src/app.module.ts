@@ -8,6 +8,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PartnersModule } from './partners/partners.module';
+import { SubtitlesModule } from './subtitles/subtitles.module';
+import { TermsModule } from './terms/terms.module';
+import { FaqsModule } from './faqs/faqs.module';
 
 
 
@@ -24,6 +27,9 @@ import { PartnersModule } from './partners/partners.module';
     DatabaseModule,
     StorageModule,
     PartnersModule,
+    SubtitlesModule,
+    TermsModule,
+    FaqsModule,
   ],
 })
 export class AppModule {}
