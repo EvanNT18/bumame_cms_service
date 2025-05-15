@@ -13,7 +13,10 @@ export class TermsService {
   ) {}
 
   async create(dto: CreateTermDto) {
-    const term = this.termRepo.create(dto);
+    const term = this.termRepo.create({
+      text: dto.text,
+      partner: { id: dto.partnerId }, 
+    });
     return this.termRepo.save(term);
   }
 
@@ -28,10 +31,16 @@ export class TermsService {
   }
 
   async update(id: string, dto: UpdateTermDto) {
-    await this.findOne(id);
-    await this.termRepo.update(id, dto);
-    return this.findOne(id);
+    const term = await this.findOne(id); 
+
+    term.text = dto.text ?? 'Default term text';
+
+    if (dto.partnerId) {
+    term.partner = { id: dto.partnerId } as any;
   }
+
+  return this.termRepo.save(term); 
+}
 
   async remove(id: string) {
     await this.findOne(id);

@@ -6,6 +6,11 @@ import { join } from 'path';
 import { StorageModule } from './storage/minio.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PartnersModule } from './partners/partners.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import dataSource from './data-source';
+import { FaqsModule } from './faqs/faqs.module';
+import { SubtitlesModule } from './subtitles/subtitles.module';
+import { TermsModule } from './terms/terms.module';
 
 
 

@@ -12,10 +12,15 @@ export class FaqsService {
     private faqRepo: Repository<Faq>,
   ) {}
 
-  create(dto: CreateFaqDto) {
-    const faq = this.faqRepo.create(dto);
-    return this.faqRepo.save(faq);
-  }
+  async create(dto: CreateFaqDto) {
+  const faq = this.faqRepo.create({
+    question: dto.question,
+    answer: dto.answer,
+    partner: { id: dto.partnerId },
+  });
+  return this.faqRepo.save(faq);
+}
+
 
   findAll() {
     return this.faqRepo.find({ relations: ['partner'] });
@@ -28,10 +33,17 @@ export class FaqsService {
   }
 
   async update(id: string, dto: UpdateFaqDto) {
-    await this.findOne(id);
-    await this.faqRepo.update(id, dto);
-    return this.findOne(id);
-  }
+  const existing = await this.findOne(id);
+
+  const updated = this.faqRepo.merge(existing, {
+    question: dto.question,
+    answer: dto.answer,
+    partner: dto.partnerId ? { id: dto.partnerId } : existing.partner, 
+  });
+
+  return this.faqRepo.save(updated);
+}
+
 
   async remove(id: string) {
     await this.findOne(id);
