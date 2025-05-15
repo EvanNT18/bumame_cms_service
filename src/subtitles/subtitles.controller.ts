@@ -1,5 +1,6 @@
 import {
   Controller, Get, Post, Body, Patch, Param, Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { SubtitlesService } from './subtitles.service';
 import { CreateSubtitleDto } from './dto/create-subtitle.dto';
@@ -12,6 +13,7 @@ export class SubtitlesController {
   constructor(private readonly service: SubtitlesService) {}
 
   @Post()
+  @HttpCode(201)
   @ApiOperation({ summary: 'Buat subtitle baru' })
   @ApiResponse({ status: 201, description: 'Subtitle berhasil dibuat' })
   create(@Body() dto: CreateSubtitleDto) {
@@ -39,6 +41,7 @@ export class SubtitlesController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   @ApiOperation({ summary: 'Hapus subtitle berdasarkan ID' })
   @ApiParam({ name: 'id', description: 'UUID subtitle' })
   remove(@Param('id') id: string) {

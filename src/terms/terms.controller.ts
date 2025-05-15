@@ -1,5 +1,6 @@
 import {
   Controller, Get, Post, Body, Patch, Param, Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { TermsService } from './terms.service';
 import { CreateTermDto } from './dto/create-term.dto';
@@ -12,6 +13,7 @@ export class TermsController {
   constructor(private readonly service: TermsService) {}
 
   @Post()
+  @HttpCode(201)
   @ApiOperation({ summary: 'Buat term (syarat dan ketentuan)' })
   @ApiResponse({ status: 201, description: 'Term berhasil dibuat' })
   create(@Body() dto: CreateTermDto) {
@@ -39,6 +41,7 @@ export class TermsController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   @ApiOperation({ summary: 'Hapus term berdasarkan ID' })
   @ApiParam({ name: 'id', description: 'UUID dari term' })
   remove(@Param('id') id: string) {

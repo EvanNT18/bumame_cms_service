@@ -17,7 +17,9 @@ export class TermsService {
       text: dto.text,
       partner: { id: dto.partnerId }, 
     });
-    return this.termRepo.save(term);
+    return {
+      message: 'Term created successfully',
+    }
   }
 
   findAll() {
@@ -39,11 +41,13 @@ export class TermsService {
     term.partner = { id: dto.partnerId } as any;
   }
 
-  return this.termRepo.save(term); 
+  return {
+    message: 'Term updated successfully',
+  }
 }
 
   async remove(id: string) {
     await this.findOne(id);
-    return this.termRepo.softDelete(id);
+    return;
   }
 }

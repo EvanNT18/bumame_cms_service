@@ -17,7 +17,9 @@ export class SubtitlesService {
     text: dto.text,
     partner: { id: dto.partnerId }, 
   });
-  return this.subtitleRepo.save(subtitle);
+  return {
+    message: 'Subtitle created successfully',
+  }
 }
 
 
@@ -42,12 +44,14 @@ export class SubtitlesService {
 }
 
 
-  return this.subtitleRepo.save(subtitle); 
+  return {
+    message: 'Subtitle updated successfully',
+  } 
 }
 
 
   async remove(id: string) {
     await this.findOne(id);   
-    return this.subtitleRepo.softDelete(id);
+    return;
   }
 }

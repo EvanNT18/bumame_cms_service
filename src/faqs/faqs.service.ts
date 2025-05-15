@@ -18,7 +18,9 @@ export class FaqsService {
     answer: dto.answer,
     partner: { id: dto.partnerId },
   });
-  return this.faqRepo.save(faq);
+  return {
+    message: 'FAQ created successfully',
+  }
 }
 
 
@@ -41,12 +43,14 @@ export class FaqsService {
     partner: dto.partnerId ? { id: dto.partnerId } : existing.partner, 
   });
 
-  return this.faqRepo.save(updated);
+  return {
+    message: 'FAQ updated successfully',
+  }
 }
 
 
   async remove(id: string) {
     await this.findOne(id);
-    return this.faqRepo.softDelete(id);
+    return;
   }
 }
