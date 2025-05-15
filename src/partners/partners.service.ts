@@ -14,10 +14,10 @@ export class PartnersService {
     ) { }
 
     async create(createPartnerDto: CreatePartnerDto) {
-        await this.partnersRepository.save(createPartnerDto);
+        await this.partnersRepository.create(createPartnerDto).save();
         
         return {
-            message: 'Partner created successfully',
+            message: `Partner created successfully`,
         }
     }
 
@@ -36,7 +36,7 @@ export class PartnersService {
         await this.partnersRepository.update(id, updatePartnerDto);
 
         return {
-            message: 'Partner updated successfully',
+            message: `Partner updated successfully`,
         }
     }
 
@@ -46,7 +46,7 @@ export class PartnersService {
         await this.partnersRepository.softDelete(id);
 
         return {
-            message: 'Partner deleted successfully',
+            message: `Partner deleted successfully`,
         }
     }
 }

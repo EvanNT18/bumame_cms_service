@@ -1,4 +1,5 @@
 import BaseEntityExtended from 'src/database/BaseEntityExtended.entity';
+import { Voucher } from 'src/vouchers/entities/voucher.entity';
 import { Entity, Column, OneToMany } from 'typeorm';
 
 @Entity('partners')
@@ -12,8 +13,8 @@ export class Partner extends BaseEntityExtended {
     @Column('varchar', { name: 'slug' })
     slug: string;
 
-    // @OneToMany(() => Voucher, voucher => voucher.partner)
-    // vouchers: Voucher[];
+    @OneToMany(() => Voucher, voucher => voucher.partner)
+    vouchers: Voucher[];
 
     // @OneToMany(() => Banner, banner => banner.partner)
     // banners: Banner[];

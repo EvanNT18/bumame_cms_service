@@ -7,6 +7,7 @@ import { StorageModule } from './storage/minio.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PartnersModule } from './partners/partners.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { VouchersModule } from './vouchers/vouchers.module';
 import dataSource from './data-source';
 
 @Module({
@@ -25,6 +26,7 @@ import dataSource from './data-source';
     DatabaseModule,
     StorageModule,
     PartnersModule,
+    VouchersModule,
   ],
 })
 export class AppModule {}

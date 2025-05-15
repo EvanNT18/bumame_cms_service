@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { Partner } from './partners/entities/partner.entity';
+import { Voucher } from './vouchers/entities/voucher.entity';
 
 config();
 
@@ -16,7 +17,8 @@ export default new DataSource({
   password: configService.get('DB_PASSWORD'),
   database: configService.get('DB_NAME'),
   entities: [
-    Partner
+    Partner,
+    Voucher,
   ],
   migrations: [__dirname + 'src/migrations/*{.ts,.js}'],
   namingStrategy: new SnakeNamingStrategy(),

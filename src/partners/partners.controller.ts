@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Body, Param, Delete, Query, DefaultValuePipe, ParseIntPipe, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, DefaultValuePipe, ParseIntPipe, HttpCode, ParseUUIDPipe, Patch } from '@nestjs/common';
 import { PartnersService } from './partners.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
-import { Partner } from './entities/partner.entity';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Partners')
 @Controller('partners')
@@ -16,8 +15,8 @@ export class PartnersController {
   @ApiResponse({
     status: 201,
     description: 'Partner created successfully',
-    type: Partner,
   })
+  @HttpCode(201)
   @Post()
   create(@Body() createPartnerDto: CreatePartnerDto) {
     return this.partnersService.create(createPartnerDto);
@@ -26,24 +25,21 @@ export class PartnersController {
   @ApiOperation({
     summary: 'Paginate partners',
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Paginated partners',
-    type: Partner,
-  })
   @ApiQuery({
     name: 'page',
     required: false,
     description: 'Page number for pagination',
-    type: Number,
     example: 1,
   })
   @ApiQuery({
     name: 'limit',
     required: false,
     description: 'Number of items per page',
-    type: Number,
     example: 10,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated partners',
   })
   @Get()
   async index(
@@ -62,27 +58,33 @@ export class PartnersController {
   @ApiOperation({
     summary: 'Get a partner by id',
   })
+  @ApiParam({
+    name: 'id',
+    description: 'Partner id',
+  })
   @ApiResponse({
     status: 200,
     description: 'Partner found',
-    type: Partner,
   })
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.partnersService.findOne(id);
   }
 
   @ApiOperation({
     summary: 'Update a partner',
   })
+  @ApiParam({
+    name: 'id',
+    description: 'Partner id', 
+  })
   @ApiResponse({
     status: 200,
     description: 'Partner updated',
-    type: Partner,
   })
-  @Put(':id')
+  @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updatePartnerDto: UpdatePartnerDto,
   ) {
     return this.partnersService.update(id, updatePartnerDto);
@@ -91,13 +93,16 @@ export class PartnersController {
   @ApiOperation({
     summary: 'Delete a partner',
   })
+  @ApiParam({
+    name: 'id',
+    description: 'Partner id',
+  })
   @ApiResponse({
     status: 200,
     description: 'Partner deleted',
-    type: Partner,
   })
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.partnersService.remove(id);
   }
 }
