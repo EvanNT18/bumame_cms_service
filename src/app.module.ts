@@ -9,6 +9,9 @@ import { PartnersModule } from './partners/partners.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { VouchersModule } from './vouchers/vouchers.module';
 import dataSource from './data-source';
+import { FaqsModule } from './faqs/faqs.module';
+import { SubtitlesModule } from './subtitles/subtitles.module';
+import { TermsModule } from './terms/terms.module';
 
 @Module({
   imports: [
@@ -27,6 +30,9 @@ import dataSource from './data-source';
     StorageModule,
     PartnersModule,
     VouchersModule,
+    SubtitlesModule,
+    TermsModule,
+    FaqsModule,
   ],
 })
 export class AppModule {}

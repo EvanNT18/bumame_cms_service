@@ -16,7 +16,7 @@ export class MinioService {
       secretKey: this.configService.get<string>('MINIO_SECRET_KEY')!,
     });
   
-    this.bucketName = this.configService.get<string>('MINIO_BANNERS_BUCKET_NAME')!;
+    this.bucketName = this.configService.get<string>('MINIO_BUCKET_NAME')!;
     this.createBucketIfNotExists();
   }
   
