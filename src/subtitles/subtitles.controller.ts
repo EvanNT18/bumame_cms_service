@@ -1,6 +1,16 @@
 import {
+<<<<<<< HEAD
   Controller, Get, Post, Body, Patch, Param, Delete,
   HttpCode,
+=======
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+>>>>>>> 9aecf93ffa0f73772242483e8743171ceaf1201f
 } from '@nestjs/common';
 import { SubtitlesService } from './subtitles.service';
 import { CreateSubtitleDto } from './dto/create-subtitle.dto';

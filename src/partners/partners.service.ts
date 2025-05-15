@@ -8,45 +8,46 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PartnersService {
-    constructor(
-        @InjectRepository(Partner)
-        private partnersRepository: Repository<Partner>,
-    ) { }
+  constructor(
+    @InjectRepository(Partner)
+    private partnersRepository: Repository<Partner>,
+  ) {}
 
-    async create(createPartnerDto: CreatePartnerDto) {
-        await this.partnersRepository.save(createPartnerDto);
-        
-        return {
-            message: 'Partner created successfully',
-        }
-    }
+  async create(createPartnerDto: CreatePartnerDto) {
+    await this.partnersRepository.create(createPartnerDto).save();
 
-    async index(options: IPaginationOptions) {
-        return paginate<Partner>(this.partnersRepository, options);
-    }
+    return {
+      message: `Partner created successfully`,
+    };
+  }
 
-    async findOne(id: string) {
-        return this.partnersRepository.findOneByOrFail({ id })
-            .catch(() => { throw new NotFoundException(`Partner with id ${id} not found`) });
-    }
+  async index(options: IPaginationOptions) {
+    return paginate<Partner>(this.partnersRepository, options);
+  }
 
-    async update(id: string, updatePartnerDto: UpdatePartnerDto) {
-        await this.findOne(id);
+  async findOne(id: string) {
+    return this.partnersRepository.findOneByOrFail({ id }).catch(() => {
+      throw new NotFoundException(`Partner with id ${id} not found`);
+    });
+  }
 
-        await this.partnersRepository.update(id, updatePartnerDto);
+  async update(id: string, updatePartnerDto: UpdatePartnerDto) {
+    await this.findOne(id);
 
-        return {
-            message: 'Partner updated successfully',
-        }
-    }
+    await this.partnersRepository.update(id, updatePartnerDto);
 
-    async remove(id: string) {
-        await this.findOne(id);
+    return {
+      message: `Partner updated successfully`,
+    };
+  }
 
-        await this.partnersRepository.softDelete(id);
+  async remove(id: string) {
+    await this.findOne(id);
 
-        return {
-            message: 'Partner deleted successfully',
-        }
-    }
+    await this.partnersRepository.softDelete(id);
+
+    return {
+      message: `Partner deleted successfully`,
+    };
+  }
 }
