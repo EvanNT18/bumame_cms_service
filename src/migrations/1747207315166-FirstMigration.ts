@@ -1,4 +1,4 @@
-import { baseEntityColumns } from "src/utils/database";
+import { baseEntityExtendedColumns } from "src/utils/database";
 import { MigrationInterface, QueryRunner, Table, TableColumn, TableForeignKey } from "typeorm";
 
 export class FirstMigration1747207315166 implements MigrationInterface {
@@ -8,7 +8,7 @@ export class FirstMigration1747207315166 implements MigrationInterface {
         await queryRunner.createTable(new Table({
             name: 'partners',
             columns: [
-                ...baseEntityColumns(),
+                ...baseEntityExtendedColumns(),
                 new TableColumn({
                     name: 'name',
                     type: 'varchar',
@@ -28,7 +28,7 @@ export class FirstMigration1747207315166 implements MigrationInterface {
         await queryRunner.createTable(new Table({
             name: 'vouchers',
             columns: [
-                ...baseEntityColumns(),
+                ...baseEntityExtendedColumns(),
                 new TableColumn({
                     name: 'title',
                     type: 'varchar',
@@ -50,7 +50,7 @@ export class FirstMigration1747207315166 implements MigrationInterface {
         await queryRunner.createTable(new Table({
             name: 'banners',
             columns: [
-                ...baseEntityColumns(),
+                ...baseEntityExtendedColumns(),
                 new TableColumn({
                     name: 'image_url',
                     type: 'varchar',
@@ -64,7 +64,7 @@ export class FirstMigration1747207315166 implements MigrationInterface {
         await queryRunner.createTable(new Table({
             name: 'faqs',
             columns: [
-                ...baseEntityColumns(),
+                ...baseEntityExtendedColumns(),
                 new TableColumn({
                     name: 'question',
                     type: 'text',
@@ -82,7 +82,7 @@ export class FirstMigration1747207315166 implements MigrationInterface {
         await queryRunner.createTable(new Table({
             name: 'subtitles',
             columns: [
-                ...baseEntityColumns(),
+                ...baseEntityExtendedColumns(),
                 new TableColumn({
                     name: 'text',
                     type: 'text',
@@ -96,7 +96,7 @@ export class FirstMigration1747207315166 implements MigrationInterface {
         await queryRunner.createTable(new Table({
             name: 'terms',
             columns: [
-                ...baseEntityColumns(),
+                ...baseEntityExtendedColumns(),
                 new TableColumn({
                     name: 'text',
                     type: 'text',

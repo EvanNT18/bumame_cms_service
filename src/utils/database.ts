@@ -1,6 +1,15 @@
-import { TableColumn } from "typeorm";
+import { EntityTarget, TableColumn } from "typeorm";
+import {
+  PipeTransform,
+  Injectable,
+  ArgumentMetadata,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { getRepository, Repository } from 'typeorm';
+import dataSource from "src/data-source";
 
-export function baseEntityColumns() {
+export function baseEntityExtendedColumns() {
     return [
         new TableColumn({
             name: 'id',
