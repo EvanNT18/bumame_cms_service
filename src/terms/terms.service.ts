@@ -44,15 +44,10 @@ export class TermsService {
       term.partner = { id: dto.partnerId } as any;
     }
 
-<<<<<<< HEAD
   return {
     message: 'Term updated successfully',
   }
 }
-=======
-    return this.termRepo.save(term);
-  }
->>>>>>> 9aecf93ffa0f73772242483e8743171ceaf1201f
 
   async remove(id: string) {
     await this.findOne(id);

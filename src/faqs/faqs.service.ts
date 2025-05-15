@@ -13,7 +13,6 @@ export class FaqsService {
   ) {}
 
   async create(dto: CreateFaqDto) {
-<<<<<<< HEAD
   const faq = this.faqRepo.create({
     question: dto.question,
     answer: dto.answer,
@@ -24,33 +23,20 @@ export class FaqsService {
   }
 }
 
-=======
-    const faq = this.faqRepo.create({
-      question: dto.question,
-      answer: dto.answer,
-      partner: { id: dto.partnerId },
-    });
-    return this.faqRepo.save(faq);
-  }
->>>>>>> 9aecf93ffa0f73772242483e8743171ceaf1201f
 
   findAll() {
     return this.faqRepo.find({ relations: ['partner'] });
   }
 
   async findOne(id: string) {
-    const faq = await this.faqRepo.findOne({
-      where: { id },
-      relations: ['partner'],
-    });
+    const faq = await this.faqRepo.findOne({ where: { id }, relations: ['partner'] });
     if (!faq) throw new NotFoundException('FAQ not found');
     return faq;
   }
 
   async update(id: string, dto: UpdateFaqDto) {
-    const existing = await this.findOne(id);
+  const existing = await this.findOne(id);
 
-<<<<<<< HEAD
   const updated = this.faqRepo.merge(existing, {
     question: dto.question,
     answer: dto.answer,
@@ -61,16 +47,7 @@ export class FaqsService {
     message: 'FAQ updated successfully',
   }
 }
-=======
-    const updated = this.faqRepo.merge(existing, {
-      question: dto.question,
-      answer: dto.answer,
-      partner: dto.partnerId ? { id: dto.partnerId } : existing.partner,
-    });
->>>>>>> 9aecf93ffa0f73772242483e8743171ceaf1201f
 
-    return this.faqRepo.save(updated);
-  }
 
   async remove(id: string) {
     await this.findOne(id);
