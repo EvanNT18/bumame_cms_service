@@ -117,10 +117,11 @@ export class PartnersController {
     description: 'Partner id',
   })
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'Partner deleted',
   })
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.partnersService.remove(id);
   }

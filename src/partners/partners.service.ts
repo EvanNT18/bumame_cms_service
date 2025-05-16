@@ -46,8 +46,6 @@ export class PartnersService {
 
     await this.partnersRepository.softDelete(id);
 
-    return {
-      message: `Partner deleted successfully`,
-    };
+    return;
   }
 }

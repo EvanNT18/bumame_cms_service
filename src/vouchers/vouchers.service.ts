@@ -79,8 +79,6 @@ export class VouchersService {
 
     await this.vouchersRepository.softDelete(id);
 
-    return {
-      message: `Voucher deleted successfully`,
-    };
+    return;
   }
 }

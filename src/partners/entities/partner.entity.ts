@@ -4,6 +4,7 @@ import { Faq } from 'src/faqs/entities/faq.entity';
 import { Subtitle } from 'src/subtitles/entities/subtitle.entity';
 import { Term } from 'src/terms/entities/term.entity';
 import { Entity, Column, OneToMany } from 'typeorm';
+import { Banner } from 'src/banners/entities/banner.entity';
 
 @Entity('partners')
 export class Partner extends BaseEntityExtended {
@@ -19,8 +20,8 @@ export class Partner extends BaseEntityExtended {
   @OneToMany(() => Voucher, (voucher) => voucher.partner)
   vouchers: Voucher[];
 
-  // @OneToMany(() => Banner, banner => banner.partner)
-  // banners: Banner[];
+  @OneToMany(() => Banner, banner => banner.partner)
+  banners: Banner[];
 
   @OneToMany(() => Faq, (faq) => faq.partner)
   faqs: Faq[];

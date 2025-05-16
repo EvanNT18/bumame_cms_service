@@ -1,17 +1,10 @@
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
+import { memoryStorage } from 'multer';
 
-export const multerOptions = {
-  storage: diskStorage({
-    destination: './uploads',
-    filename: (req, file, callback) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-      const ext = extname(file.originalname);
-      const filename = `${uniqueSuffix}${ext}`;
-      callback(null, filename);
-    },
-  }),
+export const multerOptions: MulterOptions = {
+  storage: memoryStorage(),
   fileFilter: (req, file, callback) => {
+    // TODO: make validation more robust, non-image file disguised as image must be detected and rejected
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
       return callback(new Error('Only image files are allowed!'), false);
     }

@@ -5,7 +5,7 @@ import * as Minio from 'minio';
 @Injectable()
 export class MinioService {
   private minioClient: Minio.Client;
-  private bucketName: string;
+  private bannersBucketName: string;
 
   constructor(private configService: ConfigService) {
     this.minioClient = new Minio.Client({
@@ -16,37 +16,24 @@ export class MinioService {
       secretKey: this.configService.get<string>('MINIO_SECRET_KEY')!,
     });
 
-    this.bucketName = this.configService.get<string>('MINIO_BUCKET_NAME')!;
-    this.createBucketIfNotExists();
-  }
-
-  private async createBucketIfNotExists() {
-    const bucketExists = await this.minioClient.bucketExists(this.bucketName);
-    if (!bucketExists) {
-      await this.minioClient.makeBucket(this.bucketName, 'us-east-1');
-    }
+    this.bannersBucketName = this.configService.get<string>('MINIO_BANNERS_BUCKET_NAME')!;
   }
 
   async uploadFile(
-    file: Express.Multer.File,
-    fileName: string,
-  ): Promise<string> {
-    await this.minioClient.putObject(
-      this.bucketName,
-      fileName,
-      file.buffer,
-      file.size,
-      {
-        'Content-Type': file.mimetype,
-      },
+    file: Buffer<ArrayBufferLike>,
+    filename: string
+  ): Promise<void> {
+    this.minioClient.putObject(
+      this.bannersBucketName,
+      filename,
+      file,
     );
-    return fileName;
   }
 
   async getFileUrl(fileName: string): Promise<string> {
     return this.minioClient.presignedUrl(
       'GET',
-      this.bucketName,
+      this.bannersBucketName,
       fileName,
       24 * 60 * 60, // URL berlaku 24 jam
     );
@@ -63,6 +50,6 @@ export class MinioService {
 
   async deleteFile(urlOrName: string): Promise<void> {
     const fileName = this.extractFileName(urlOrName);
-    await this.minioClient.removeObject(this.bucketName, fileName);
+    await this.minioClient.removeObject(this.bannersBucketName, fileName);
   }
 }

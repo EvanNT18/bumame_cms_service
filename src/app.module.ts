@@ -2,9 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 
-import { join } from 'path';
 import { StorageModule } from './storage/minio.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { PartnersModule } from './partners/partners.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { VouchersModule } from './vouchers/vouchers.module';
@@ -12,6 +10,7 @@ import dataSource from './data-source';
 import { FaqsModule } from './faqs/faqs.module';
 import { SubtitlesModule } from './subtitles/subtitles.module';
 import { TermsModule } from './terms/terms.module';
+import { BannersModule } from './banners/banners.module';
 
 @Module({
   imports: [
@@ -22,10 +21,6 @@ import { TermsModule } from './terms/terms.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
-      serveRoot: '/uploads',
-    }),
     DatabaseModule,
     StorageModule,
     PartnersModule,
@@ -33,6 +28,7 @@ import { TermsModule } from './terms/terms.module';
     SubtitlesModule,
     TermsModule,
     FaqsModule,
+    BannersModule,
   ],
 })
 export class AppModule {}

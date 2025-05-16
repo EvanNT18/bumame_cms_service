@@ -2,11 +2,6 @@ import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { Partner } from './partners/entities/partner.entity';
-import { Voucher } from './vouchers/entities/voucher.entity';
-import { Term } from './terms/entities/term.entity';
-import { Faq } from './faqs/entities/faq.entity';
-import { Subtitle } from './subtitles/entities/subtitle.entity';
 
 config();
 
@@ -19,8 +14,8 @@ export default new DataSource({
   username: configService.get('DB_USERNAME'),
   password: configService.get('DB_PASSWORD'),
   database: configService.get('DB_NAME'),
-  entities: [Partner, Voucher, Term, Subtitle, Faq],
-  migrations: [__dirname + 'src/migrations/*{.ts,.js}'],
+  entities: ['dist/**/*.entity.js'],
+  migrations: ['dist/migrations/*.js'],
   namingStrategy: new SnakeNamingStrategy(),
   migrationsTransactionMode: 'each',
 });

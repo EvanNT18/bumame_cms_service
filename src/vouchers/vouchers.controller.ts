@@ -118,9 +118,10 @@ export class VouchersController {
     description: 'Voucher ID',
   })
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'Voucher deleted successfully',
   })
+  @HttpCode(204)
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.vouchersService.remove(id);
   }
