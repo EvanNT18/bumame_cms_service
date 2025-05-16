@@ -11,17 +11,23 @@ import {
   HttpCode,
   ParseUUIDPipe,
   Patch,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { PartnersService } from './partners.service';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
 import {
+  ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/config/multer.config';
 
 @ApiTags('Partners')
 @Controller('partners')
@@ -31,14 +37,35 @@ export class PartnersController {
   @ApiOperation({
     summary: 'Create a new partner',
   })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: {
+          example: 'Corporation ABC, Inc.',
+          type: 'string',
+        },
+        slug: {
+          example: 'corporation-abc-inc',
+          type: 'string',
+        },
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @ApiResponse({
     status: 201,
     description: 'Partner created successfully',
   })
   @HttpCode(201)
   @Post()
-  create(@Body() createPartnerDto: CreatePartnerDto) {
-    return this.partnersService.create(createPartnerDto);
+  @UseInterceptors(FileInterceptor('image', multerOptions))
+  create(@UploadedFile() image: Express.Multer.File, @Body() createPartnerDto: CreatePartnerDto) {
+    return this.partnersService.create(image, createPartnerDto);
   }
 
   @ApiOperation({
@@ -113,16 +140,38 @@ export class PartnersController {
     name: 'id',
     description: 'Partner id',
   })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: {
+          example: 'Corporation ABC, Inc.',
+          type: 'string',
+        },
+        slug: {
+          example: 'corporation-abc-inc',
+          type: 'string',
+        },
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @ApiResponse({
     status: 200,
     description: 'Partner updated',
   })
-  @Patch(':id')
+  @Patch('/:id')
+  @UseInterceptors(FileInterceptor('image', multerOptions))
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updatePartnerDto: UpdatePartnerDto,
+    @UploadedFile() image: Express.Multer.File,
+    @Body() updatePartnerDto: CreatePartnerDto,
   ) {
-    return this.partnersService.update(id, updatePartnerDto);
+    return this.partnersService.update(id, image, updatePartnerDto);
   }
 
   @ApiOperation({

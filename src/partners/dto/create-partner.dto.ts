@@ -10,13 +10,6 @@ export class CreatePartnerDto {
   name: string;
 
   @ApiProperty({
-    description: 'URL of the partner logo',
-    example: 'https://example.com/logo.png',
-  })
-  @IsString()
-  logoUrl: string;
-
-  @ApiProperty({
     description: 'Slug for the partner',
     example: 'corporation-abc-inc',
   })

@@ -1,12 +1,13 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePartnerDto } from './dto/create-partner.dto';
 import { UpdatePartnerDto } from './dto/update-partner.dto';
 import { Repository } from 'typeorm';
-import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
+import { IPaginationMeta, IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 import { Partner } from './entities/partner.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Banner } from 'src/banners/entities/banner.entity';
 import { MinioService } from 'src/storage/minio.service';
+import sharp from 'sharp';
 
 @Injectable()
 export class PartnersService {
@@ -18,8 +19,17 @@ export class PartnersService {
     private partnersRepository: Repository<Partner>,
   ) {}
 
-  async create(createPartnerDto: CreatePartnerDto) {
-    await this.partnersRepository.create(createPartnerDto).save();
+  async create(image: Express.Multer.File, createPartnerDto: CreatePartnerDto) {
+    if (!image) throw new BadRequestException('image is required');
+    
+    const processedImageBuffer = await sharp(image.buffer).resize(1920, 1080).webp().toBuffer();
+    const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.webp';
+    await this.minioService.uploadFile(processedImageBuffer, filename);
+
+    await this.partnersRepository.create({
+      ...createPartnerDto,
+      logoFilename: filename,
+    }).save();
 
     return {
       message: `Partner created successfully`,
@@ -27,7 +37,18 @@ export class PartnersService {
   }
 
   async index(options: IPaginationOptions) {
-    return await paginate<Partner>(this.partnersRepository, options);
+    return await paginate<Partner>(this.partnersRepository, options).then(async (partners) => {
+      return {
+        items: await Promise.all(partners.items.map(async (partner) => {
+          return {
+            ...partner,
+            logoFilename: await this.minioService.getFileUrl(partner.logoFilename),
+          }
+        })),
+        meta: partners.meta,
+        links: partners.links,
+      } as Pagination<Partner, IPaginationMeta>;
+    });
   }
 
   async findOne(id: string) {
@@ -35,6 +56,7 @@ export class PartnersService {
       .then(async (partner) => {
         return {
           ...partner,
+          logoFilename: await this.minioService.getFileUrl(partner.logoFilename),
           banners: await Promise.all(partner.banners.map(async (banner) => {
             return {
               ...banner,
@@ -66,10 +88,20 @@ export class PartnersService {
       });
   }
 
-  async update(id: string, updatePartnerDto: UpdatePartnerDto) {
+  async update(id: string, image: Express.Multer.File, updatePartnerDto: UpdatePartnerDto) {
     await this.findOne(id);
 
-    await this.partnersRepository.update(id, updatePartnerDto);
+    let newFilename;
+    if (image) {
+        const processedImageBuffer = await sharp(image.buffer).resize(1920, 1080).webp().toBuffer();
+        newFilename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.webp';
+        await this.minioService.uploadFile(processedImageBuffer, newFilename);
+    }
+
+    await this.partnersRepository.update(id, {
+      ...updatePartnerDto,
+      logoFilename: newFilename,
+    });
 
     return {
       message: `Partner updated successfully`,
