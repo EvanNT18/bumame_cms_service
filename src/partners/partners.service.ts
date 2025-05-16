@@ -42,8 +42,8 @@ export class PartnersService {
         items: await Promise.all(partners.items.map(async (partner) => {
           return {
             ...partner,
-            logoFilename: await this.minioService.getFileUrl(partner.logoFilename),
-          }
+            logoUrl: await this.minioService.getFileUrl(partner.logoFilename),
+          } as unknown as Partner;
         })),
         meta: partners.meta,
         links: partners.links,
@@ -56,7 +56,7 @@ export class PartnersService {
       .then(async (partner) => {
         return {
           ...partner,
-          logoFilename: await this.minioService.getFileUrl(partner.logoFilename),
+          logoUrl: await this.minioService.getFileUrl(partner.logoFilename),
           banners: await Promise.all(partner.banners.map(async (banner) => {
             return {
               ...banner,
@@ -75,6 +75,7 @@ export class PartnersService {
       .then(async (partner) => {
         return {
           ...partner,
+          logoUrl: await this.minioService.getFileUrl(partner.logoFilename),
           banners: await Promise.all(partner.banners.map(async (banner) => {
             return {
               ...banner,
