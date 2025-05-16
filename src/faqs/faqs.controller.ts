@@ -1,4 +1,8 @@
 import {
+<<<<<<< HEAD
+  Controller, Get, Post, Body, Patch, Param, Delete,
+  HttpCode,
+=======
   Controller,
   Get,
   Post,
@@ -6,6 +10,7 @@ import {
   Patch,
   Param,
   Delete,
+>>>>>>> 9aecf93ffa0f73772242483e8743171ceaf1201f
 } from '@nestjs/common';
 import { FaqsService } from './faqs.service';
 import { CreateFaqDto } from './dto/create-faq.dto';
@@ -18,6 +23,7 @@ export class FaqsController {
   constructor(private readonly service: FaqsService) {}
 
   @Post()
+  @HttpCode(201)
   @ApiOperation({ summary: 'Buat FAQ baru' })
   create(@Body() dto: CreateFaqDto) {
     return this.service.create(dto);
@@ -44,6 +50,7 @@ export class FaqsController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   @ApiOperation({ summary: 'Hapus FAQ berdasarkan ID' })
   @ApiParam({ name: 'id', description: 'UUID dari FAQ' })
   remove(@Param('id') id: string) {
