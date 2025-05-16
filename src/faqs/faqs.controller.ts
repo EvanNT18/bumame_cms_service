@@ -1,8 +1,4 @@
 import {
-<<<<<<< HEAD
-  Controller, Get, Post, Body, Patch, Param, Delete,
-  HttpCode,
-=======
   Controller,
   Get,
   Post,
@@ -10,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
->>>>>>> 9aecf93ffa0f73772242483e8743171ceaf1201f
+  HttpCode,
 } from '@nestjs/common';
 import { FaqsService } from './faqs.service';
 import { CreateFaqDto } from './dto/create-faq.dto';
