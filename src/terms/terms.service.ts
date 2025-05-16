@@ -19,7 +19,7 @@ export class TermsService {
     });
     return {
       message: 'Term created successfully',
-    }
+    };
   }
 
   findAll() {
@@ -44,10 +44,10 @@ export class TermsService {
       term.partner = { id: dto.partnerId } as any;
     }
 
-  return {
-    message: 'Term updated successfully',
+    return {
+      message: 'Term updated successfully',
+    };
   }
-}
 
   async remove(id: string) {
     await this.findOne(id);

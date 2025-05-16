@@ -13,15 +13,14 @@ export class SubtitlesService {
   ) {}
 
   async create(dto: CreateSubtitleDto) {
-  const subtitle = this.subtitleRepo.create({
-    text: dto.text,
-    partner: { id: dto.partnerId }, 
-  });
-  return {
-    message: 'Subtitle created successfully',
+    const subtitle = this.subtitleRepo.create({
+      text: dto.text,
+      partner: { id: dto.partnerId },
+    });
+    return {
+      message: 'Subtitle created successfully',
+    };
   }
-}
-
 
   findAll() {
     return this.subtitleRepo.find({ relations: ['partner'] });
@@ -45,19 +44,17 @@ export class SubtitlesService {
       subtitle.partner = { id: dto.partnerId } as any;
     }
 
-  if (dto.partnerId) {
-  subtitle.partner = { id: dto.partnerId } as any;
-}
+    if (dto.partnerId) {
+      subtitle.partner = { id: dto.partnerId } as any;
+    }
 
-
-  return {
-    message: 'Subtitle updated successfully',
-  } 
-}
-
+    return {
+      message: 'Subtitle updated successfully',
+    };
+  }
 
   async remove(id: string) {
-    await this.findOne(id);   
+    await this.findOne(id);
     return;
   }
 }

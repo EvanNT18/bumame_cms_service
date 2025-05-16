@@ -20,7 +20,7 @@ export class Partner extends BaseEntityExtended {
   @OneToMany(() => Voucher, (voucher) => voucher.partner)
   vouchers: Voucher[];
 
-  @OneToMany(() => Banner, banner => banner.partner)
+  @OneToMany(() => Banner, (banner) => banner.partner)
   banners: Banner[];
 
   @OneToMany(() => Faq, (faq) => faq.partner)

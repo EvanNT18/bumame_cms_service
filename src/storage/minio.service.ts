@@ -16,18 +16,16 @@ export class MinioService {
       secretKey: this.configService.get<string>('MINIO_SECRET_KEY')!,
     });
 
-    this.bannersBucketName = this.configService.get<string>('MINIO_BANNERS_BUCKET_NAME')!;
+    this.bannersBucketName = this.configService.get<string>(
+      'MINIO_BANNERS_BUCKET_NAME',
+    )!;
   }
 
   async uploadFile(
     file: Buffer<ArrayBufferLike>,
-    filename: string
+    filename: string,
   ): Promise<void> {
-    this.minioClient.putObject(
-      this.bannersBucketName,
-      filename,
-      file,
-    );
+    this.minioClient.putObject(this.bannersBucketName, filename, file);
   }
 
   async getFileUrl(fileName: string): Promise<string> {
