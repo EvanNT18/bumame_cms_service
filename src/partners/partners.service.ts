@@ -22,11 +22,11 @@ export class PartnersService {
   }
 
   async index(options: IPaginationOptions) {
-    return paginate<Partner>(this.partnersRepository, options);
+    return await paginate<Partner>(this.partnersRepository, options);
   }
 
   async findOne(id: string) {
-    return this.partnersRepository.findOneByOrFail({ id }).catch(() => {
+    return this.partnersRepository.findOneOrFail({ where: { id }, relations: ['vouchers', 'banners', 'subtitles', 'faqs', 'terms'] }).catch(() => {
       throw new NotFoundException(`Partner with id ${id} not found`);
     });
   }
