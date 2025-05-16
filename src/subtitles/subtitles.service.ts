@@ -17,6 +17,9 @@ export class SubtitlesService {
       text: dto.text,
       partner: { id: dto.partnerId },
     });
+
+    await this.subtitleRepo.save(subtitle);
+
     return {
       message: 'Subtitle created successfully',
     };
@@ -48,6 +51,7 @@ export class SubtitlesService {
       subtitle.partner = { id: dto.partnerId } as any;
     }
 
+    
     return {
       message: 'Subtitle updated successfully',
     };

@@ -18,6 +18,9 @@ export class FaqsService {
       answer: dto.answer,
       partner: { id: dto.partnerId },
     });
+
+    await this.faqRepo.save(faq);
+
     return {
       message: 'FAQ created successfully',
     };
@@ -44,6 +47,8 @@ export class FaqsService {
       answer: dto.answer,
       partner: dto.partnerId ? { id: dto.partnerId } : existing.partner,
     });
+
+    
 
     return {
       message: 'FAQ updated successfully',

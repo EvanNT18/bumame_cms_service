@@ -17,6 +17,9 @@ export class TermsService {
       text: dto.text,
       partner: { id: dto.partnerId },
     });
+
+    await this.termRepo.save(term);
+
     return {
       message: 'Term created successfully',
     };
@@ -43,6 +46,8 @@ export class TermsService {
     if (dto.partnerId) {
       term.partner = { id: dto.partnerId } as any;
     }
+
+    
 
     return {
       message: 'Term updated successfully',
