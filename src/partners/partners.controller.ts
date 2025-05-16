@@ -91,6 +91,22 @@ export class PartnersController {
   }
 
   @ApiOperation({
+    summary: 'Get a partner by slug',
+  })
+  @ApiParam({
+    name: 'slug',
+    description: 'Partner slug',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Partner found',
+  })
+  @Get('/by_slug/:slug')
+  findOneBySlug(@Param('slug') slug: string) {
+    return this.partnersService.findOneBySlug(slug);
+  }
+
+  @ApiOperation({
     summary: 'Update a partner',
   })
   @ApiParam({

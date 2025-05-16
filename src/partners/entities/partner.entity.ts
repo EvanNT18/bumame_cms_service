@@ -14,7 +14,7 @@ export class Partner extends BaseEntityExtended {
   @Column('varchar', { name: 'logo_url' })
   logoUrl: string;
 
-  @Column('varchar', { name: 'slug' })
+  @Column('varchar', { name: 'slug', unique: true })
   slug: string;
 
   @OneToMany(() => Voucher, (voucher) => voucher.partner)
