@@ -5,7 +5,9 @@ import * as Minio from 'minio';
 @Injectable()
 export class MinioService {
   private minioClient: Minio.Client;
-  private bannersBucketName: string;
+
+  public BANNERS_BUCKET: string;
+  public PARTNER_LOGOS_BUCKET: string;
 
   constructor(private configService: ConfigService) {
     this.minioClient = new Minio.Client({
@@ -16,25 +18,35 @@ export class MinioService {
       secretKey: this.configService.get<string>('MINIO_SECRET_KEY')!,
     });
 
-    this.bannersBucketName = this.configService.get<string>(
+    this.BANNERS_BUCKET = this.configService.get<string>(
       'MINIO_BANNERS_BUCKET_NAME',
+    )!;
+
+    this.PARTNER_LOGOS_BUCKET = this.configService.get<string>(
+      'MINIO_PARTNER_LOGOS_BUCKET_NAME',
     )!;
   }
 
   async uploadFile(
     file: Buffer<ArrayBufferLike>,
     filename: string,
+    bucketName: string,
   ): Promise<void> {
-    this.minioClient.putObject(this.bannersBucketName, filename, file);
+    this.minioClient.putObject(bucketName, filename, file);
   }
 
-  async getFileUrl(fileName: string): Promise<string> {
+  async getFileUrl(fileName: string, bucketName: string): Promise<string> {
     return this.minioClient.presignedUrl(
       'GET',
-      this.bannersBucketName,
+      bucketName,
       fileName,
       24 * 60 * 60, // URL berlaku 24 jam
     );
+  }
+
+  async deleteFile(urlOrName: string, bucketName: string): Promise<void> {
+    const fileName = this.extractFileName(urlOrName);
+    await this.minioClient.removeObject(bucketName, fileName);
   }
 
   private extractFileName(urlOrName: string): string {
@@ -44,10 +56,5 @@ export class MinioService {
     const parts = raw.split('/');
     const lastSegment = parts[parts.length - 1];
     return lastSegment.split('?')[0];
-  }
-
-  async deleteFile(urlOrName: string): Promise<void> {
-    const fileName = this.extractFileName(urlOrName);
-    await this.minioClient.removeObject(this.bannersBucketName, fileName);
   }
 }

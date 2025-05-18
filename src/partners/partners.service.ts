@@ -21,10 +21,17 @@ export class PartnersService {
 
   async create(image: Express.Multer.File, createPartnerDto: CreatePartnerDto) {
     if (!image) throw new BadRequestException('image is required');
+
+    if (await this.partnersRepository.findOneBy({ slug: createPartnerDto.slug }))
+      throw new BadRequestException('Slug already exists');
     
     const processedImageBuffer = await sharp(image.buffer).resize(1920, 1080).webp().toBuffer();
     const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.webp';
-    await this.minioService.uploadFile(processedImageBuffer, filename);
+    await this.minioService.uploadFile(
+      processedImageBuffer,
+      filename,
+      this.minioService.PARTNER_LOGOS_BUCKET
+    );
 
     await this.partnersRepository.create({
       ...createPartnerDto,
@@ -42,7 +49,7 @@ export class PartnersService {
         items: await Promise.all(partners.items.map(async (partner) => {
           return {
             ...partner,
-            logoUrl: await this.minioService.getFileUrl(partner.logoFilename),
+            logoUrl: await this.minioService.getFileUrl(partner.logoFilename, this.minioService.PARTNER_LOGOS_BUCKET),
           } as unknown as Partner;
         })),
         meta: partners.meta,
@@ -56,11 +63,11 @@ export class PartnersService {
       .then(async (partner) => {
         return {
           ...partner,
-          logoUrl: await this.minioService.getFileUrl(partner.logoFilename),
+          logoUrl: await this.minioService.getFileUrl(partner.logoFilename, this.minioService.PARTNER_LOGOS_BUCKET),
           banners: await Promise.all(partner.banners.map(async (banner) => {
             return {
               ...banner,
-              imageUrl: await this.minioService.getFileUrl(banner.filename),
+              imageUrl: await this.minioService.getFileUrl(banner.filename, this.minioService.BANNERS_BUCKET),
             } as unknown as Banner;
           })),
         }
@@ -75,11 +82,11 @@ export class PartnersService {
       .then(async (partner) => {
         return {
           ...partner,
-          logoUrl: await this.minioService.getFileUrl(partner.logoFilename),
+          logoUrl: await this.minioService.getFileUrl(partner.logoFilename, this.minioService.PARTNER_LOGOS_BUCKET),
           banners: await Promise.all(partner.banners.map(async (banner) => {
             return {
               ...banner,
-              imageUrl: await this.minioService.getFileUrl(banner.filename),
+              imageUrl: await this.minioService.getFileUrl(banner.filename, this.minioService.BANNERS_BUCKET),
             } as unknown as Banner;
           })),
         }
@@ -90,19 +97,25 @@ export class PartnersService {
   }
 
   async update(id: string, image: Express.Multer.File, updatePartnerDto: UpdatePartnerDto) {
-    await this.findOne(id);
+    const oldPartner = await this.findOne(id);
 
     let newFilename;
     if (image) {
         const processedImageBuffer = await sharp(image.buffer).resize(1920, 1080).webp().toBuffer();
         newFilename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.webp';
-        await this.minioService.uploadFile(processedImageBuffer, newFilename);
+        await this.minioService.uploadFile(
+          processedImageBuffer,
+          newFilename,
+          this.minioService.PARTNER_LOGOS_BUCKET,
+        );
     }
 
     await this.partnersRepository.update(id, {
       ...updatePartnerDto,
       logoFilename: newFilename,
     });
+
+    if (newFilename) await this.minioService.deleteFile(oldPartner.logoFilename, this.minioService.PARTNER_LOGOS_BUCKET);
 
     return {
       message: `Partner updated successfully`,

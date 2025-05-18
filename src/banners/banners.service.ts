@@ -49,7 +49,11 @@ export class BannersService {
       .toBuffer();
     const filename =
       Date.now() + '-' + Math.round(Math.random() * 1e9) + '.webp';
-    await this.minioService.uploadFile(processedImageBuffer, filename);
+    await this.minioService.uploadFile(
+      processedImageBuffer,
+      filename,
+      this.minioService.BANNERS_BUCKET,
+    );
 
     const { partnerId, ...bannerData } = createBannerDto;
     await this.bannersRepository
@@ -78,7 +82,7 @@ export class BannersService {
       items.map(async (banner) => {
         return {
           ...banner,
-          imageUrl: await this.minioService.getFileUrl(banner.filename),
+          imageUrl: await this.minioService.getFileUrl(banner.filename, this.minioService.BANNERS_BUCKET),
         } as unknown as Banner;
       }),
     );
@@ -96,7 +100,7 @@ export class BannersService {
       .then(async (banner) => {
         return {
           ...banner,
-          imageUrl: await this.minioService.getFileUrl(banner.filename),
+          imageUrl: await this.minioService.getFileUrl(banner.filename, this.minioService.BANNERS_BUCKET),
         };
       })
       .catch(() => {
@@ -119,7 +123,11 @@ export class BannersService {
         .toBuffer();
       newFilename =
         Date.now() + '-' + Math.round(Math.random() * 1e9) + '.webp';
-      await this.minioService.uploadFile(processedImageBuffer, newFilename);
+      await this.minioService.uploadFile(
+        processedImageBuffer,
+        newFilename,
+        this.minioService.BANNERS_BUCKET,
+      );
     }
 
     let newPartner;
@@ -140,7 +148,7 @@ export class BannersService {
       ...bannerData,
     });
 
-    if (newFilename) await this.minioService.deleteFile(oldBanner.filename);
+    if (newFilename) await this.minioService.deleteFile(oldBanner.filename, this.minioService.BANNERS_BUCKET);
 
     return {
       message: 'Banner updated successfully',
