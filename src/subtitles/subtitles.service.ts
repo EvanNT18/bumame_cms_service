@@ -39,19 +39,13 @@ export class SubtitlesService {
   }
 
   async update(id: string, dto: UpdateSubtitleDto) {
-    const subtitle = await this.findOne(id);
+    await this.findOne(id);
 
-    subtitle.text = dto.text ?? 'Default subtitle text';
+    await this.subtitleRepo.update(id, {
+      text: dto.text,
+      partner: dto.partnerId ? { id: dto.partnerId } : undefined,
+    });
 
-    if (dto.partnerId) {
-      subtitle.partner = { id: dto.partnerId } as any;
-    }
-
-    if (dto.partnerId) {
-      subtitle.partner = { id: dto.partnerId } as any;
-    }
-
-    
     return {
       message: 'Subtitle updated successfully',
     };

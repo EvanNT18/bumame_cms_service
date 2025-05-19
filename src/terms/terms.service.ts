@@ -39,15 +39,12 @@ export class TermsService {
   }
 
   async update(id: string, dto: UpdateTermDto) {
-    const term = await this.findOne(id);
+    await this.findOne(id);
 
-    term.text = dto.text ?? 'Default term text';
-
-    if (dto.partnerId) {
-      term.partner = { id: dto.partnerId } as any;
-    }
-
-    
+    await this.termRepo.update(id, {
+      text: dto.text,
+      partner: dto.partnerId ? { id: dto.partnerId } : undefined,
+    });
 
     return {
       message: 'Term updated successfully',

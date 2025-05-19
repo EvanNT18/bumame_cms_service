@@ -169,7 +169,7 @@ export class PartnersController {
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @UploadedFile() image: Express.Multer.File,
-    @Body() updatePartnerDto: CreatePartnerDto,
+    @Body() updatePartnerDto: UpdatePartnerDto,
   ) {
     return this.partnersService.update(id, image, updatePartnerDto);
   }

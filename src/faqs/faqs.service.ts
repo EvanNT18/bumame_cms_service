@@ -40,15 +40,13 @@ export class FaqsService {
   }
 
   async update(id: string, dto: UpdateFaqDto) {
-    const existing = await this.findOne(id);
+    await this.findOne(id);
 
-    const updated = this.faqRepo.merge(existing, {
+    await this.faqRepo.update(id, {
       question: dto.question,
       answer: dto.answer,
-      partner: dto.partnerId ? { id: dto.partnerId } : existing.partner,
+      partner: dto.partnerId ? { id: dto.partnerId } : undefined,
     });
-
-    
 
     return {
       message: 'FAQ updated successfully',
@@ -57,6 +55,9 @@ export class FaqsService {
 
   async remove(id: string) {
     await this.findOne(id);
+
+    await this.faqRepo.softDelete(id);
+
     return;
   }
 }
