@@ -44,7 +44,7 @@ export class BannersService {
       });
 
     const processedImageBuffer = await sharp(image.buffer)
-      .resize(1920, 1080)
+      // .resize(1920, 1080)
       .webp()
       .toBuffer();
     const filename =
@@ -118,7 +118,7 @@ export class BannersService {
     let newFilename;
     if (image) {
       const processedImageBuffer = await sharp(image.buffer)
-        .resize(1920, 1080)
+        // .resize(1920, 1080)
         .webp()
         .toBuffer();
       newFilename =

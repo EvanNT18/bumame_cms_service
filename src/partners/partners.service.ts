@@ -25,7 +25,7 @@ export class PartnersService {
     if (await this.partnersRepository.findOneBy({ slug: createPartnerDto.slug }))
       throw new BadRequestException('Slug already exists');
     
-    const processedImageBuffer = await sharp(image.buffer).resize(1920, 1080).webp().toBuffer();
+    const processedImageBuffer = await sharp(image.buffer).webp().toBuffer();
     const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.webp';
     await this.minioService.uploadFile(
       processedImageBuffer,
@@ -44,7 +44,9 @@ export class PartnersService {
   }
 
   async index(options: IPaginationOptions) {
-    return await paginate<Partner>(this.partnersRepository, options).then(async (partners) => {
+    return await paginate<Partner>(this.partnersRepository, options, {
+      relations: [`vouchers`]
+    }).then(async (partners) => {
       return {
         items: await Promise.all(partners.items.map(async (partner) => {
           return {
@@ -101,7 +103,7 @@ export class PartnersService {
 
     let newFilename;
     if (image) {
-        const processedImageBuffer = await sharp(image.buffer).resize(1920, 1080).webp().toBuffer();
+        const processedImageBuffer = await sharp(image.buffer).webp().toBuffer();
         newFilename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.webp';
         await this.minioService.uploadFile(
           processedImageBuffer,
