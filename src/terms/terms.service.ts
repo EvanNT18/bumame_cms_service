@@ -15,7 +15,6 @@ export class TermsService {
   async create(dto: CreateTermDto) {
     const term = this.termRepo.create({
       text: dto.text,
-      partner: { id: dto.partnerId },
     });
 
     await this.termRepo.save(term);
@@ -43,7 +42,6 @@ export class TermsService {
 
     await this.termRepo.update(id, {
       text: dto.text,
-      partner: dto.partnerId ? { id: dto.partnerId } : undefined,
     });
 
     return {

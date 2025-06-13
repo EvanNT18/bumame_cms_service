@@ -90,6 +90,22 @@ export class VouchersController {
     return this.vouchersService.findOne(id);
   }
 
+  @Get('slug/:slug')
+  @ApiOperation({
+    summary: 'Get a voucher by slug',
+  })
+  @ApiParam({
+    name: 'slug',
+    description: 'Voucher slug',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Voucher found',
+  })
+  async findBySlug(@Param('slug') slug: string) {
+    return this.vouchersService.findBySlug(slug);
+  }
+
   @Patch(':id')
   @ApiOperation({
     summary: 'Update a voucher by ID',

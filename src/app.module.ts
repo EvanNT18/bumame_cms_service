@@ -16,6 +16,7 @@ import { BannersModule } from './banners/banners.module';
   imports: [
     TypeOrmModule.forRoot({
       ...dataSource.options,
+      autoLoadEntities: true,
     }),
     ConfigModule.forRoot({
       isGlobal: true,

@@ -28,7 +28,4 @@ export class Partner extends BaseEntityExtended {
 
   @OneToMany(() => Subtitle, (subtitle) => subtitle.partner)
   subtitles: Subtitle[];
-
-  @OneToMany(() => Term, (term) => term.partner)
-  terms: Term[];
 }

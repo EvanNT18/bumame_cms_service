@@ -4,10 +4,12 @@ import { VouchersController } from './vouchers.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Voucher } from './entities/voucher.entity';
 import { Partner } from 'src/partners/entities/partner.entity';
+import { Term } from 'src/terms/entities/term.entity';
+import { MinioService } from 'src/storage/minio.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Voucher, Partner])],
+  imports: [TypeOrmModule.forFeature([Voucher, Term, Partner])],
   controllers: [VouchersController],
-  providers: [VouchersService],
+  providers: [VouchersService, MinioService],
 })
 export class VouchersModule {}

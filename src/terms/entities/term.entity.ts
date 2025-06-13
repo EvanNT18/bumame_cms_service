@@ -1,13 +1,13 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Partner } from 'src/partners/entities/partner.entity';
 import BaseEntityExtended from 'src/database/BaseEntityExtended.entity';
+import { Voucher } from 'src/vouchers/entities/voucher.entity';
 
 @Entity('terms')
 export class Term extends BaseEntityExtended {
   @Column('text', { name: 'text' })
   text: string;
 
-  @ManyToOne(() => Partner, (partner) => partner.terms)
-  @JoinColumn({ name: 'partner_id' })
-  partner: Partner;
+  @ManyToOne(() => Voucher, (voucher) => voucher.terms)
+  @JoinColumn({ name: 'voucher_id' })
+  voucher: Voucher;
 }

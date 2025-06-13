@@ -33,10 +33,12 @@ export class PartnersService {
       this.minioService.PARTNER_LOGOS_BUCKET
     );
 
-    await this.partnersRepository.create({
-      ...createPartnerDto,
-      logoFilename: filename,
-    }).save();
+    const partner = this.partnersRepository.create({
+    ...createPartnerDto,
+    logoFilename: filename,
+  });
+
+  await this.partnersRepository.save(partner);
 
     return {
       message: `Partner created successfully`,
@@ -45,7 +47,7 @@ export class PartnersService {
 
   async index(options: IPaginationOptions) {
     return await paginate<Partner>(this.partnersRepository, options, {
-      relations: [`vouchers`]
+      relations: [`vouchers`,'vouchers.terms']
     }).then(async (partners) => {
       return {
         items: await Promise.all(partners.items.map(async (partner) => {
@@ -61,7 +63,7 @@ export class PartnersService {
   }
 
   async findOne(id: string) {
-    return this.partnersRepository.findOneOrFail({ where: { id }, relations: ['vouchers', 'banners', 'subtitles', 'faqs', 'terms'] })
+    return this.partnersRepository.findOneOrFail({ where: { id }, relations: ['vouchers', 'banners', 'subtitles', 'faqs'] })
       .then(async (partner) => {
         return {
           ...partner,
@@ -80,7 +82,7 @@ export class PartnersService {
   }
 
   async findOneBySlug(slug: string) {
-    return this.partnersRepository.findOneOrFail({ where: { slug }, relations: ['vouchers', 'banners', 'subtitles', 'faqs', 'terms'] })
+    return this.partnersRepository.findOneOrFail({ where: { slug }, relations: [`vouchers`,'vouchers.terms', 'banners', 'subtitles', 'faqs'] })
       .then(async (partner) => {
         return {
           ...partner,

@@ -4,6 +4,7 @@ import { PartnersController } from './partners.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Partner } from './entities/partner.entity';
 import { MinioService } from 'src/storage/minio.service';
+import { VouchersService } from 'src/vouchers/vouchers.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Partner])],
