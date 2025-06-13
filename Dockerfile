@@ -3,13 +3,13 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files first to leverage Docker cache
 COPY package*.json ./
 
 # Install dependencies
 RUN npm ci
 
-# Copy source code
+# Copy source code after package installation
 COPY . .
 
 # Build the application
@@ -20,7 +20,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files first to leverage Docker cache
 COPY package*.json ./
 
 # Install production dependencies only

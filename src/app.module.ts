@@ -11,6 +11,7 @@ import { FaqsModule } from './faqs/faqs.module';
 import { SubtitlesModule } from './subtitles/subtitles.module';
 import { TermsModule } from './terms/terms.module';
 import { BannersModule } from './banners/banners.module';
+import { ProxyModule } from './proxy/proxy.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { BannersModule } from './banners/banners.module';
     TermsModule,
     FaqsModule,
     BannersModule,
+    ProxyModule,
   ],
 })
 export class AppModule {}
