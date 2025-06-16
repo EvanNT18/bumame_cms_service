@@ -1,13 +1,16 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
+import { PreviewVoucherDto, PreviewVoucherResponseDto } from './dto/preview-voucher.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, LessThan } from 'typeorm';
 import { Voucher } from './entities/voucher.entity';
+import { VoucherPreview } from './entities/voucher-preview.entity';
 import { IPaginationOptions, paginate } from 'nestjs-typeorm-paginate';
 import { Partner } from 'src/partners/entities/partner.entity';
 import { Term } from 'src/terms/entities/term.entity';
 import { MinioService } from 'src/storage/minio.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class VouchersService {
@@ -20,6 +23,8 @@ export class VouchersService {
     private vouchersRepository: Repository<Voucher>,  
     @InjectRepository(Term)
     private termsRepository: Repository<Term>,
+    @InjectRepository(VoucherPreview)
+    private voucherPreviewRepository: Repository<VoucherPreview>,
     @Inject(MinioService)
     private readonly minioService: MinioService,
   ) {}
@@ -156,5 +161,85 @@ export class VouchersService {
     await this.vouchersRepository.softDelete(id);
 
     return;
+  }
+
+  // Preview Voucher Methods
+  async createPreview(previewVoucherDto: PreviewVoucherDto): Promise<PreviewVoucherResponseDto> {
+    // Generate session ID if not provided
+    const sessionId = previewVoucherDto.sessionId || `preview-${uuidv4()}`;
+    
+    // Set expiration time (24 hours from now)
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 24);
+
+    // Prepare preview data (exclude sessionId from the stored data)
+    const { sessionId: _, ...previewData } = previewVoucherDto;
+    
+    // Set link based on typeLink for preview
+    let finalLink: string | null = null;
+    if (previewData.typeLink === 'wa') {
+      finalLink = this.WA_LINK(previewData.voucherCode);
+    } else if (previewData.typeLink === 'custom') {
+      finalLink = previewData.link || null;
+    }
+
+    const previewDataWithLink = {
+      ...previewData,
+      link: finalLink,
+    };
+
+    // Delete existing preview with same session ID
+    await this.voucherPreviewRepository.delete({ sessionId });
+
+    // Create new preview
+    const voucherPreview = this.voucherPreviewRepository.create({
+      sessionId,
+      previewData: JSON.stringify(previewDataWithLink),
+      expiresAt,
+    });
+
+    const savedPreview = await this.voucherPreviewRepository.save(voucherPreview);
+
+    return {
+      sessionId: savedPreview.sessionId,
+      previewData: savedPreview.previewData,
+      expiresAt: savedPreview.expiresAt,
+    };
+  }
+
+  async getPreview(sessionId: string): Promise<PreviewVoucherResponseDto> {
+    const preview = await this.voucherPreviewRepository.findOne({
+      where: { sessionId },
+    });
+
+    if (!preview) {
+      throw new NotFoundException(`Preview with session ID ${sessionId} not found`);
+    }
+
+    // Check if preview has expired
+    if (new Date() > preview.expiresAt) {
+      await this.voucherPreviewRepository.delete({ sessionId });
+      throw new NotFoundException(`Preview with session ID ${sessionId} has expired`);
+    }
+
+    return {
+      sessionId: preview.sessionId,
+      previewData: preview.previewData,
+      expiresAt: preview.expiresAt,
+    };
+  }
+
+  async deletePreview(sessionId: string): Promise<void> {
+    const result = await this.voucherPreviewRepository.delete({ sessionId });
+    
+    if (result.affected === 0) {
+      throw new NotFoundException(`Preview with session ID ${sessionId} not found`);
+    }
+  }
+
+  async cleanupExpiredPreviews(): Promise<void> {
+    await this.voucherPreviewRepository.delete({
+      expiresAt: LessThan(new Date()),
+    });
   }
 }

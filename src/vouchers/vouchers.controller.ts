@@ -15,6 +15,7 @@ import {
 import { VouchersService } from './vouchers.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
+import { PreviewVoucherDto, PreviewVoucherResponseDto } from './dto/preview-voucher.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -140,5 +141,57 @@ export class VouchersController {
   @HttpCode(204)
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.vouchersService.remove(id);
+  }
+
+  // Preview Endpoints
+  @Post('preview')
+  @ApiOperation({
+    summary: 'Create a voucher preview',
+    description: 'Create a temporary preview of voucher data that expires after 24 hours',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Preview created successfully',
+    type: PreviewVoucherResponseDto,
+  })
+  @HttpCode(201)
+  async createPreview(@Body() previewVoucherDto: PreviewVoucherDto): Promise<PreviewVoucherResponseDto> {
+    return this.vouchersService.createPreview(previewVoucherDto);
+  }
+
+  @Get('preview/:sessionId')
+  @ApiOperation({
+    summary: 'Get voucher preview by session ID',
+    description: 'Retrieve voucher preview data using session ID',
+  })
+  @ApiParam({
+    name: 'sessionId',
+    description: 'Preview session ID',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Preview data retrieved successfully',
+    type: PreviewVoucherResponseDto,
+  })
+  async getPreview(@Param('sessionId') sessionId: string): Promise<PreviewVoucherResponseDto> {
+    return this.vouchersService.getPreview(sessionId);
+  }
+
+  @Delete('preview/:sessionId')
+  @ApiOperation({
+    summary: 'Delete voucher preview by session ID',
+    description: 'Delete voucher preview data using session ID',
+  })
+  @ApiParam({
+    name: 'sessionId',
+    description: 'Preview session ID',
+  })
+  @ApiResponse({
+    status: 204,
+    description: 'Preview deleted successfully',
+  })
+  @HttpCode(204)
+  async deletePreview(@Param('sessionId') sessionId: string): Promise<void> {
+    return this.vouchersService.deletePreview(sessionId);
   }
 }
