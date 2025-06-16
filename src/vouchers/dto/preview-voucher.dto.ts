@@ -21,10 +21,19 @@ export class PreviewVoucherResponseDto {
   sessionId: string;
 
   @ApiProperty({
-    description: 'Preview data as JSON string',
-    example: '{"title":"Test Voucher","voucherCode":"TEST123","description":"Test description"}',
+    description: 'Preview data as JSON object',
+    example: {
+      title: 'Test Voucher',
+      voucherCode: 'TEST123',
+      description: 'Test description',
+      slug: 'test-voucher',
+      typeLink: 'wa',
+      link: 'https://api.whatsapp.com/send/?phone=6281119088808&text=Hi+Bumame%2C+I+want+to+redeem+my+code%3A+TEST123',
+      partnerId: 'uuid-partner-id',
+      terms: [{ text: 'Berlaku hingga akhir bulan' }]
+    },
   })
-  previewData: string;
+  previewData: any;
 
   @ApiProperty({
     description: 'Expiration time for the preview',

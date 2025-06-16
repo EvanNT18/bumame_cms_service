@@ -202,7 +202,7 @@ export class VouchersService {
 
     return {
       sessionId: savedPreview.sessionId,
-      previewData: savedPreview.previewData,
+      previewData: previewDataWithLink,
       expiresAt: savedPreview.expiresAt,
     };
   }
@@ -222,9 +222,17 @@ export class VouchersService {
       throw new NotFoundException(`Preview with session ID ${sessionId} has expired`);
     }
 
+    // Parse JSON string to object
+    let parsedPreviewData: any;
+    try {
+      parsedPreviewData = JSON.parse(preview.previewData);
+    } catch (error) {
+      throw new Error('Invalid preview data format');
+    }
+
     return {
       sessionId: preview.sessionId,
-      previewData: preview.previewData,
+      previewData: parsedPreviewData,
       expiresAt: preview.expiresAt,
     };
   }
